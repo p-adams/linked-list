@@ -6,6 +6,9 @@
 // sortedInsert -> insert element in correct sorted position in list
 // insertSort -> rearrange nodes so they are in sorted order using sortedInsert
 // append -> takes two lists (a & b) and appends b onto a and sets b to null
+// removeDuplicates -> takes sorted list and deletes any duplicate node
+// reverse -> takes a list and reverses it
+// removeNth -> remove element at nth position
 
 // Node constructor
 function Node(data) {
@@ -65,6 +68,11 @@ Node.prototype.print = function(head){
     }
 }
 
+Node.prototype.reversePrint = function(head){
+    if(head===null)return
+    this.reversePrint(head.next)
+    console.log(head.data)
+}
 Node.prototype.count = function(head, el){
     if(!head) return 0
     if(head.data===el){
@@ -142,6 +150,45 @@ Node.prototype.append = function(headA, headB){
     return result
 }
 
+Node.prototype.removeDuplicates = function(head){
+
+    if(!head)return
+    else{
+        if(head.next){
+            if(head.data===head.next.data){
+                let next = head.next.next
+                head.next = next
+                this.removeDuplicates(head)
+                return head
+            }
+            else{
+                head = head.next
+                this.removeDuplicates(head)
+                return head
+            }
+        }
+    }
+}
+
+Node.prototype.reverse = function(head){
+   if(head === null || head.next === null) return head
+   let remaining = this.reverse(head.next)
+   head.next.next = head
+   head.next = null
+   return remaining
+}
+
+Node.prototype.removeNth = function(head, index){
+    if(index===0){
+        head = head.next
+        return head
+    }
+    head.next = this.removeNth(head.next, index-1)
+    return head
+}
+
+
+
 
 /* List functions */
 
@@ -154,6 +201,11 @@ List.prototype.print = function(){
     console.log("---list contains---")
     this.head!=null ? this.head.print(this.head) : null
 }
+
+List.prototype.reversePrint = function(){
+    this.head = this.head.reversePrint(this.head)
+}
+
 
 List.prototype.addFront = function(data){
     if(!this.head) this.head = new Node(data, null)
@@ -209,20 +261,27 @@ List.prototype.append = function(otherListHead){
    this.head = this.head.append(this.head, otherListHead.head)
 }
 
+List.prototype.removeDuplicates = function(){
+   this.head = this.head.removeDuplicates(this.head)
+}
 
+List.prototype.reverse = function(){
+    this.head = this.head.reverse(this.head)
+}
 
-
-
-
+List.prototype.removeNth = function(index){
+    this.head = this.head.removeNth(this.head, index)
+}
 
 list = new List();
 //listB = new ListB();
 
 list.addFront("snake")
-list.addFront("dog")
-list.addFront("ape")
 list.addFront("cat")
-
+list.addFront("ape")
 list.print()
+list.removeNth(1)
+list.print()
+
 
 
